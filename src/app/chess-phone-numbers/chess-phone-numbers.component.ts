@@ -97,7 +97,7 @@ export class ChessPhoneNumbersComponent implements OnInit{
   }
     
 
-  getPhoneButtonColmns() : number[]{
+  getPhoneButtonColumns() : number[]{
     if (!this.phonePad)
       return [];
     return Array.from(Array(this.phonePad.columnCount).keys());
