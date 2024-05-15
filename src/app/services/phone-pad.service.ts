@@ -8,18 +8,18 @@ const API_URL = environment.apiPhonePadsUrl;
 @Injectable({
   providedIn: 'root'
 })
-export class PhonePadService {
+  export class PhonePadService {
 
   private http = inject(HttpClient);
    
    
   constructor() { }
 
- getPhonePads() :Observable<PhonePad>{
-   return this.http.get<PhonePad>(API_URL);
- }
+  getPhonePads() :Observable<PhonePad>{
+    return this.http.get<PhonePad>(API_URL);
+  }
 
- getPhonePad(phonePadId: number) : Observable<PhonePad> {
+  getPhonePad(phonePadId: number) : Observable<PhonePad> {
    return this.http.get<PhonePad>(`${API_URL}${phonePadId}`);
- }
+  }
 }

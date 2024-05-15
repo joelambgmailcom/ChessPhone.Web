@@ -11,9 +11,8 @@ const API_URL = environment.apiChessPiecesUrl;
 })
 export class ChessPiecesService {
    private http = inject(HttpClient);
-   
-   
-   constructor() { }
+      
+  constructor() { }
 
   public getChessPieces() :Observable<ChessPiece>{
     return this.http.get<ChessPiece>(API_URL);

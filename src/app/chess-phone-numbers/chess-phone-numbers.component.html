@@ -1,71 +1,50 @@
 <div>
   <div><h1>Chess Piece Phone Numbers</h1></div>
   <div totalPhoneNumbers><h2>{{totalPhoneNumbersMessage}}</h2></div>
-  <table>
-    <tr>
-      <td>
-        <div top>
-          <div>
-            <mat-form-field>
-              <mat-label>Chess Pieces</mat-label>
-                <mat-select (selectionChange)="onChessPieceSelection($event.value)">
-                 @for (chessPiece of chessPieces; track chessPiece.id) {
-                  <mat-option [value]="chessPiece.id">{{chessPiece.name}}</mat-option>
-                  }
-              </mat-select>
-            </mat-form-field>
-          </div>
-          <div>
-           <mat-form-field>
-            <mat-label>Phone Pads</mat-label>
-             <mat-select (selectionChange)="onPhonePadSelection($event.value)">
-                @for (phonePad of phonePads; track phonePad.id) {
-                    <mat-option [value]="phonePad.id">{{phonePad.name}}</mat-option>
-                }
-             </mat-select>
-           </mat-form-field>
-          </div>
-          <div>
-            <mat-form-field>
-              <mat-label>Number of moves</mat-label>
-                <mat-select (selectionChange)="onNumberOfTurnsSelection($event.value)">
-                  @for (eachTurn of maximumNumberOfTurns; track eachTurn) {
-                    <mat-option [value]="eachTurn">{{eachTurn}}</mat-option>
-                  }
-                </mat-select>
-            </mat-form-field>
-          </div>
-        </div>
-        <div>
-          @for (row of getPhoneButtonRows(); track row; let  rowIndex = $index) {    
-            <div>
-              @for (column of getPhoneButtonColumns(); track column; let  columnIndex = $index){
-                <span><button 
-                        mat-fab extended 
-                        [disabled]= "(getPhoneButton(columnIndex,rowIndex)).isAlwaysInvalid"    
-                        >
-                    {{ getPhoneButton(columnIndex, rowIndex).label  }}
-                  </button></span>
-              }
-            </div>
-          }
-        </div>
-      </td>
-      <td>
-        <div class="example-listbox-container">
-          <label class="example-listbox-label" id="example-zodiac-sign-label">
-          </label>
-          <ul cdkListbox
-             
-              aria-labelledby="example-zodiac-sign-label"
-              class="example-listbox">
-            @for (sign of phoneNumberList; track sign) {
-              <li class="example-option">{{sign}}</li>
+  <div>
+    <div>
+      <mat-form-field>
+        <mat-label>Chess Pieces</mat-label>
+          <mat-select (selectionChange)="onChessPieceSelection($event.value)">
+            @for (chessPiece of chessPieces; track chessPiece.id) {
+            <mat-option [value]="chessPiece.id">{{chessPiece.name}}</mat-option>
             }
-          </ul>
-        </div>
-
-      </td>
-    </tr>
-  </table>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div>
+      <mat-form-field>
+      <mat-label>Phone Pads</mat-label>
+        <mat-select (selectionChange)="onPhonePadSelection($event.value)">
+          @for (phonePad of phonePads; track phonePad.id) {
+              <mat-option [value]="phonePad.id">{{phonePad.name}}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div>
+      <mat-form-field>
+        <mat-label>Number of moves</mat-label>
+          <mat-select (selectionChange)="onNumberOfTurnsSelection($event.value)">
+            @for (eachTurn of maximumNumberOfTurns; track eachTurn) {
+              <mat-option [value]="eachTurn">{{eachTurn}}</mat-option>
+            }
+          </mat-select>
+      </mat-form-field>
+    </div>
+  </div>
+  <div>
+    @for (row of getPhoneButtonRows(); track row; let  rowIndex = $index) {    
+      <div>
+        @for (column of getPhoneButtonColumns(); track column; let  columnIndex = $index){
+          <span><button 
+                  mat-fab extended 
+                  [disabled]= "(getPhoneButton(columnIndex,rowIndex)).isAlwaysInvalid"    
+                  >
+              {{ getPhoneButton(columnIndex, rowIndex).label  }}
+            </button></span>
+        }
+      </div>
+    }
+  </div>
 </div>

@@ -7,8 +7,9 @@ import { PhonePad } from '../interfaces/phone-pad';
 import { PhonePadService } from '../services/phone-pad.service';
 import { PhoneNumberService } from '../services/phone-number.service'; 
 import { PhoneButton } from '../interfaces/phone-button';
+import { PhoneNumberResult } from '../interfaces/phone-number-result';
 import { CommonModule } from '@angular/common';
-import {CdkListbox} from '@angular/cdk/listbox';
+import { CdkListbox } from '@angular/cdk/listbox';
 
 @Component({
   selector: 'app-chess-phone-numbers',
@@ -20,25 +21,23 @@ import {CdkListbox} from '@angular/cdk/listbox';
 export class ChessPhoneNumbersComponent implements OnInit{
   private chessPieceService = inject(ChessPiecesService);
   private phonePadServiceService = inject(PhonePadService);
-  private  phoneNumberService = inject(PhoneNumberService);
+  private phoneNumberService = inject(PhoneNumberService);
 
   chessPieces: ChessPiece[] = [];
   phonePads: PhonePad[] = [];
 
+  maximumNumberOfTurns: number[] = [1,2,3,4,5,6,7,8,9,10,11,12];
   chessPiece:ChessPiece;
   phonePad: PhonePad;
   turns: number;
-
-  phoneNumberCount: number;
-  phoneNumberList: string[];
+  totalPhoneNumbersMessage: string = "";
+  phoneNumberResult: PhoneNumberResult;
 
   ngOnInit(): void {
     this.loadChessPieces();
     this.loadPhonePads();
   }
 
-  maximumNumberOfTurns: any = [1,2,3,4,5,6,7,8];
-  totalPhoneNumbersMessage: string = "";
 
   loadChessPieces(){
     this.chessPieceService.getChessPieces().subscribe({
@@ -46,7 +45,7 @@ export class ChessPhoneNumbersComponent implements OnInit{
         this.chessPieces = chessPieces as ChessPiece[];
         console.log('Chess Pieces fetched successfully');
       },
-      error: (error) => console.log('Error Fetching Chess Pieces:', error)
+      error: (error: any) => console.log('Error Fetching Chess Pieces:', error)
     });
   }
 
@@ -56,44 +55,31 @@ export class ChessPhoneNumbersComponent implements OnInit{
         this.phonePads = phonePads as PhonePad[];
         console.log('Phone Pads fetched successfully');
       },
-      error: (error) => console.log('Error Fetching Phone Pads:', error)
+      error: (error: any) => console.log('Error Fetching Phone Pads:', error)
     });
   }
 
   updateTotalPhoneNumbers(){
+    this.totalPhoneNumbersMessage = "";
     if (!this.chessPiece || !this.phonePad || !this.turns || this.turns <= 0)
       {
-        this.totalPhoneNumbersMessage = "";
         return;
       }
     
-    if (this.turns <= this.phonePad.numberOfTurnsWithListMaximum)
-    {
-      this.phoneNumberService.getPhoneNumbersList(this.chessPiece.id, this.phonePad.id, this.turns).subscribe({
-        next: (phoneNumberCount: any) =>{
-          this.phoneNumberCount = (phoneNumberCount as string[]).length;
-          this.phoneNumberList = (phoneNumberCount as string[]);
-          this.updateTotalPhoneNumbersMessage();
-          console.log('Phone Numbers fetched successfully');
-        },
-        error: (error: any) => console.log('Error Fetching Phone Pads:', error)
-      });
-      return;
-    }
-
-    this.phoneNumberService.getPhoneNumbersCount(this.chessPiece.id, this.phonePad.id, this.turns).subscribe({
-      next: (phoneNumberCount: any) =>{
-        this.phoneNumberCount = phoneNumberCount;
-        this.phoneNumberList = [];
+    this.phoneNumberService.getPhoneNumbers(this.chessPiece.id, this.phonePad.id, this.turns).subscribe({
+      next: (phoneNumberResult: any) =>{
+        this.phoneNumberResult = phoneNumberResult;
         this.updateTotalPhoneNumbersMessage();
         console.log('Phone Numbers fetched successfully');
       },
-      error: (error) => console.log('Error Fetching Phone Pads:', error)
+      error: (error: any) => console.log('Error Fetching Phone Pads:', error)
     });
   }
 
   updateTotalPhoneNumbersMessage(){
-    this.totalPhoneNumbersMessage = `Total Phone Numbers: ${this.phoneNumberCount.toLocaleString()}`;
+    if (this.phoneNumberResult.phoneNumberCount)
+      this.totalPhoneNumbersMessage 
+        = `Total Phone Numbers: ${this.phoneNumberResult.phoneNumberCount.toLocaleString()} in ${this.phoneNumberResult.generationTimeInMilliseconds.toLocaleString()} milliseconds`;
   }
     
 
