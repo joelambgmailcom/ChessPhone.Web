@@ -14,14 +14,14 @@ export class PhoneNumberService {
    
    constructor() { }
 
-  getPhoneNumbersCount(chessPieceId: number, PhonePadId: number, numberOfMoves: number) {
-    let url = `${API_JUST_TOTAL_URL}?chessPieceId=${chessPieceId}&phonePadId=${PhonePadId}&lengthOfPhoneNumber=${numberOfMoves}`;
+  getPhoneNumbersCount(chessPieceId: number, phonePadId: number, numberOfMoves: number, phoneNumberGeneratorId: number) : any {
+    let url = `${API_JUST_TOTAL_URL}?chessPieceId=${chessPieceId}&phonePadId=${phonePadId}&lengthOfPhoneNumber=${numberOfMoves}&phoneNumberGeneratorId=${phoneNumberGeneratorId}`;
     console.log(url);
     return this.http.get(url);
   }
 
-  getPhoneNumbersList(chessPieceId: number, PhonePadId: number, numberOfMoves: number) : any {
-    let url = `${API_WITH_LIST_URL}?chessPieceId=${chessPieceId}&phonePadId=${PhonePadId}&lengthOfPhoneNumber=${numberOfMoves}`;
+  getPhoneNumbersList(chessPieceId: number, phonePadId: number, numberOfMoves: number, phoneNumberGeneratorId: number) : any {
+    let url = `${API_WITH_LIST_URL}?chessPieceId=${chessPieceId}&phonePadId=${phonePadId}&lengthOfPhoneNumber=${numberOfMoves}&phoneNumberGeneratorId=${phoneNumberGeneratorId}`;
     console.log(url);
     return this.http.get(url);
   }

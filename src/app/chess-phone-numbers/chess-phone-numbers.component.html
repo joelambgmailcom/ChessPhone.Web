@@ -3,12 +3,11 @@
   <div totalPhoneNumbers><h2>{{totalPhoneNumbersMessage}}</h2></div>
   <table>
     <tr>
-      <td>
-        <div top>
-          <div>
-            <mat-form-field>
-              <mat-label>Chess Pieces</mat-label>
-                <mat-select (selectionChange)="onChessPieceSelection($event.value)">
+      <td wide>
+          <div top wide>
+            <mat-form-field  top>
+              <mat-label wide>Chess Pieces</mat-label>
+                <mat-select wide (selectionChange)="onChessPieceSelection($event.value)">
                  @for (chessPiece of chessPieces; track chessPiece.id) {
                   <mat-option [value]="chessPiece.id">{{chessPiece.name}}</mat-option>
                   }
@@ -28,14 +27,23 @@
           <div>
             <mat-form-field>
               <mat-label>Number of moves</mat-label>
-                <mat-select (selectionChange)="onNumberOfTurnsSelection($event.value)">
-                  @for (eachTurn of maximumNumberOfTurns; track eachTurn) {
-                    <mat-option [value]="eachTurn">{{eachTurn}}</mat-option>
-                  }
-                </mat-select>
+              <mat-select (selectionChange)="onNumberOfTurnsSelection($event.value)">
+                @for (eachTurn of maximumNumberOfTurns; track eachTurn) {
+                  <mat-option [value]="eachTurn">{{eachTurn}}</mat-option>
+                }
+              </mat-select>
             </mat-form-field>
           </div>
-        </div>
+          <div>
+            <mat-form-field>
+              <mat-label>Phone Number Generator</mat-label>
+              <mat-select (selectionChange)="onPhoneNumberGenerator($event.value)">
+                @for (phoneNumberGenerator of phoneNumberGenerators; track phoneNumberGenerator) {
+                  <mat-option [value]="phoneNumberGenerator.id">{{phoneNumberGenerator.name}}</mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+          </div>
         <div>
           @for (row of getPhoneButtonRows(); track row; let  rowIndex = $index) {    
             <div>
@@ -52,19 +60,13 @@
         </div>
       </td>
       <td>
-        <div class="example-listbox-container">
-          <label class="example-listbox-label" id="example-zodiac-sign-label">
-          </label>
-          <ul cdkListbox
-             
-              aria-labelledby="example-zodiac-sign-label"
-              class="example-listbox">
-            @for (sign of phoneNumberList; track sign) {
-              <li class="example-option">{{sign}}</li>
+        <div class="example-listbox-container" *ngIf="phoneNumberResult != null && phoneNumberResult.phoneNumberList && phoneNumberResult.phoneNumberList && phoneNumberResult.phoneNumberList.length > 0">
+          <ul cdkListbox class="example-listbox">
+            @for (sign of phoneNumberResult.phoneNumberList; track sign) {
+              <li>{{sign}}</li>
             }
           </ul>
         </div>
-
       </td>
     </tr>
   </table>

@@ -7,6 +7,7 @@ import { PhonePad } from '../interfaces/phone-pad';
 import { PhonePadService } from '../services/phone-pad.service';
 import { PhoneNumberService } from '../services/phone-number.service'; 
 import { PhoneButton } from '../interfaces/phone-button';
+import { PhoneNumberResult } from '../interfaces/phone-number-result';
 import { CommonModule } from '@angular/common';
 import {CdkListbox} from '@angular/cdk/listbox';
 
@@ -20,25 +21,30 @@ import {CdkListbox} from '@angular/cdk/listbox';
 export class ChessPhoneNumbersComponent implements OnInit{
   private chessPieceService = inject(ChessPiecesService);
   private phonePadServiceService = inject(PhonePadService);
-  private  phoneNumberService = inject(PhoneNumberService);
+  private phoneNumberService = inject(PhoneNumberService);
 
   chessPieces: ChessPiece[] = [];
   phonePads: PhonePad[] = [];
+  maximumNumberOfTurns: number[] = [1,2,3,4,5,6,7,8,9,10,11,12];
+  phoneNumberGenerators: any[] = [
+      {id: 1,name: "Original Phone Number Generator"},
+      {id: 2, name: "Better String Handling Phone Number Generator"},
+      {id: 3, name: "Summation Phone Number Generator"}];
 
   chessPiece:ChessPiece;
   phonePad: PhonePad;
   turns: number;
+  phoneNumberGenerator: any;
+  totalPhoneNumbersMessage: string = "";
 
-  phoneNumberCount: number;
-  phoneNumberList: string[];
+  phoneNumberResult: PhoneNumberResult;
 
   ngOnInit(): void {
     this.loadChessPieces();
     this.loadPhonePads();
   }
 
-  maximumNumberOfTurns: any = [1,2,3,4,5,6,7,8];
-  totalPhoneNumbersMessage: string = "";
+  
 
   loadChessPieces(){
     this.chessPieceService.getChessPieces().subscribe({
@@ -61,18 +67,17 @@ export class ChessPhoneNumbersComponent implements OnInit{
   }
 
   updateTotalPhoneNumbers(){
-    if (!this.chessPiece || !this.phonePad || !this.turns || this.turns <= 0)
+    this.totalPhoneNumbersMessage = "";
+    if (!this.chessPiece || !this.phonePad || !this.turns || this.turns <= 0 || !this.phoneNumberGenerator)
       {
-        this.totalPhoneNumbersMessage = "";
         return;
       }
     
     if (this.turns <= this.phonePad.numberOfTurnsWithListMaximum)
     {
-      this.phoneNumberService.getPhoneNumbersList(this.chessPiece.id, this.phonePad.id, this.turns).subscribe({
-        next: (phoneNumberCount: any) =>{
-          this.phoneNumberCount = (phoneNumberCount as string[]).length;
-          this.phoneNumberList = (phoneNumberCount as string[]);
+      this.phoneNumberService.getPhoneNumbersList(this.chessPiece.id, this.phonePad.id, this.turns, this.phoneNumberGenerator.id).subscribe({
+        next: (phoneNumberResult: PhoneNumberResult) =>{
+          this.phoneNumberResult = phoneNumberResult;
           this.updateTotalPhoneNumbersMessage();
           console.log('Phone Numbers fetched successfully');
         },
@@ -81,19 +86,20 @@ export class ChessPhoneNumbersComponent implements OnInit{
       return;
     }
 
-    this.phoneNumberService.getPhoneNumbersCount(this.chessPiece.id, this.phonePad.id, this.turns).subscribe({
-      next: (phoneNumberCount: any) =>{
-        this.phoneNumberCount = phoneNumberCount;
-        this.phoneNumberList = [];
+    this.phoneNumberService.getPhoneNumbersCount(this.chessPiece.id, this.phonePad.id, this.turns, this.phoneNumberGenerator.id).subscribe({
+      next: (phoneNumberResult: PhoneNumberResult) =>{
+        this.phoneNumberResult = phoneNumberResult;
         this.updateTotalPhoneNumbersMessage();
         console.log('Phone Numbers fetched successfully');
       },
-      error: (error) => console.log('Error Fetching Phone Pads:', error)
+      error: (error: any) => console.log('Error Fetching Phone Pads:', error)
     });
   }
 
   updateTotalPhoneNumbersMessage(){
-    this.totalPhoneNumbersMessage = `Total Phone Numbers: ${this.phoneNumberCount.toLocaleString()}`;
+    if (this.phoneNumberResult.phoneNumberCount)
+      this.totalPhoneNumbersMessage 
+        = `Total Phone Numbers: ${this.phoneNumberResult.phoneNumberCount.toLocaleString()} in ${this.phoneNumberResult.generationTimeInMilliseconds.toLocaleString()} milliseconds`;
   }
     
 
@@ -134,6 +140,13 @@ export class ChessPhoneNumbersComponent implements OnInit{
   onNumberOfTurnsSelection(value: any) {
     console.log('Number of Moves Changed!');
     this.turns = value;
+    console.log(value);
+    this.updateTotalPhoneNumbers()
+  }
+
+  onPhoneNumberGenerator(value: any) {
+    console.log('Generator has Changed!');
+    this.phoneNumberGenerator = this.phoneNumberGenerators.find(generator => generator.id == value);
     console.log(value);
     this.updateTotalPhoneNumbers()
   }

@@ -4,6 +4,9 @@ button {
     height: 75px;
     width: 75px; 
 }
+.wide {
+  width:650px !important;
+}
 
 .totalPhoneNumbers {
     height: 90px;
@@ -52,7 +55,7 @@ button {
     list-style: none;
     padding: 0;
     margin: 0;
-    height: 400px;
+    height: 600px;
     overflow: auto;
   }
   
